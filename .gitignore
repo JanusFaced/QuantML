@@ -1,0 +1,13 @@
+__pycache__/
+**/__pycache__/
+pipeline/src/logs/
+pipeline/src/logs/*
+!pipeline/src/logs/.gitkeep
+pipeline/src/output/
+pipeline/src/output/*
+!pipeline/src/output/.gitkeep
+*.key
+*.crt
+*.pem
+*.cert
+.env
