@@ -4,7 +4,8 @@ import pandas as pd
 import numpy as np
 import numpy.typing as npt
 from numba import njit
-from darts.models import LinearRegressionModel
+from darts.models import ExponentialSmoothing
+from darts.utils.utils import ModelMode, SeasonalityMode
 from darts import TimeSeries
 from darts.metrics import mape
 import os
@@ -39,7 +40,13 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 	trainSeriesClose, testSeriesClose = seriesClose[:train_size], seriesClose[train_size:]
 	trainSeriesVolume, testSeriesVolume = seriesVolume[:train_size], seriesVolume[train_size:]
 
-	model = LinearRegressionModel(lags=20)
+	model = ExponentialSmoothing(
+		trend=ModelMode.NONE,
+		seasonal=SeasonalityMode.NONE,
+		seasonal_periods=None,
+		damped=False,
+		random_state=42
+	)
 	model.fit(trainSeriesClose)
 
 	historical_forecasts = model.historical_forecasts(
@@ -47,7 +54,7 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 		start=train_size,
 		forecast_horizon=1,
 		stride=1,
-		retrain=False,
+		retrain=True,
 		overlap_end=True,
 		verbose=True
 	)

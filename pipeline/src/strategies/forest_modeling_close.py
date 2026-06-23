@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import numpy.typing as npt
 from numba import njit
-from darts.models import LinearRegressionModel
+from darts.models import RandomForestModel
 from darts import TimeSeries
 from darts.metrics import mape
 import os
@@ -39,7 +39,15 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 	trainSeriesClose, testSeriesClose = seriesClose[:train_size], seriesClose[train_size:]
 	trainSeriesVolume, testSeriesVolume = seriesVolume[:train_size], seriesVolume[train_size:]
 
-	model = LinearRegressionModel(lags=20)
+	model = RandomForestModel(
+		lags=20,
+		n_estimators=100,
+		max_depth=10,
+		min_samples_split=5,
+		min_samples_leaf=2,
+		random_state=42,
+		n_jobs=-1
+	)
 	model.fit(trainSeriesClose)
 
 	historical_forecasts = model.historical_forecasts(
