@@ -47,7 +47,7 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 		start=train_size,
 		forecast_horizon=1,
 		stride=1,
-		retrain=False,
+		retrain=True,
 		overlap_end=True,
 		verbose=True
 	)

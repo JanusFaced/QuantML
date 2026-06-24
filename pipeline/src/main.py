@@ -1,11 +1,11 @@
 from typing import Any
 import dataFrameDownloader
-from strategies import lr_modeling_close
 from strategies import smooth_modeling_close
-from strategies import forest_modeling_close
-from strategies import boost_modeling_close
+from strategies import lr_modeling_close
 from strategies import lr_modeling_ind
+from strategies import forest_modeling_close
 from strategies import forest_modeling_ind
+from strategies import boost_modeling_close
 from strategies import boost_modeling_ind
 import trading_simulator
 from logger_setup import get_logger
@@ -21,18 +21,18 @@ def main(inputMessage: dict[str, Any]) -> None:
 		timeFrame=inputMessage['timeFrame']
 	)
 
-	if inputMessage["strategy"] == "lr_modeling_close":
-		dataFrame = lr_modeling_close.main(inputMessage, dataFrame)
-	elif inputMessage["strategy"] == "smooth_modeling_close":
+	if inputMessage["strategy"] == "smooth_modeling_close":
 		dataFrame = smooth_modeling_close.main(inputMessage, dataFrame)
-	elif inputMessage["strategy"] == "forest_modeling_close":
-		dataFrame = forest_modeling_close.main(inputMessage, dataFrame)
-	elif inputMessage["strategy"] == "boost_modeling_close":
-		dataFrame = boost_modeling_close.main(inputMessage, dataFrame)
+	elif inputMessage["strategy"] == "lr_modeling_close":
+		dataFrame = lr_modeling_close.main(inputMessage, dataFrame)
 	elif inputMessage["strategy"] == "lr_modeling_ind":
 		dataFrame = lr_modeling_ind.main(inputMessage, dataFrame)
+	elif inputMessage["strategy"] == "forest_modeling_close":
+		dataFrame = forest_modeling_close.main(inputMessage, dataFrame)
 	elif inputMessage["strategy"] == "forest_modeling_ind":
 		dataFrame = forest_modeling_ind.main(inputMessage, dataFrame)
+	elif inputMessage["strategy"] == "boost_modeling_close":
+		dataFrame = boost_modeling_close.main(inputMessage, dataFrame)
 	elif inputMessage["strategy"] == "boost_modeling_ind":
 		dataFrame = boost_modeling_ind.main(inputMessage, dataFrame)
 
@@ -41,47 +41,47 @@ def main(inputMessage: dict[str, Any]) -> None:
 if __name__ == "__main__":
 
 	listMSGs = [
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'boost_modeling_ind'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'forest_modeling_close'},
 
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'boost_modeling_ind'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'forest_modeling_close'},
 
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'boost_modeling_ind'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'boost_modeling_ind'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'forest_modeling_close'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'forest_modeling_close'},
 
 
 #		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'master'},
