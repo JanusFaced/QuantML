@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import numpy.typing as npt
 from numba import njit
-from darts.models import RandomForestModel
+from darts.models import LinearRegressionModel
 from darts import TimeSeries
 from darts.metrics import mape
 import os
@@ -25,11 +25,19 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 
 	train_ratio: float = 0.50
 
+	windowInd = 1
+	dataFrame['original'] = dataFrame['close']/dataFrame['close'].shift(windowInd) - 1
+	dataFrame['indicator'] = np.abs(dataFrame['original'])
+
+	dataFrame = dataFrame.loc[windowInd:]
+
 	seriesOpen = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='open')
 	seriesHigh = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='high')
 	seriesLow = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='low')
 	seriesClose = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='close')
 	seriesVolume = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='volume')
+	seriesOriginal = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='original')
+	seriesIndicator = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='indicator')
 
 	train_size = int(len(seriesClose)*train_ratio)
 
@@ -38,24 +46,26 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 	trainSeriesLow, testSeriesLow = seriesLow[:train_size], seriesLow[train_size:]
 	trainSeriesClose, testSeriesClose = seriesClose[:train_size], seriesClose[train_size:]
 	trainSeriesVolume, testSeriesVolume = seriesVolume[:train_size], seriesVolume[train_size:]
+	trainSeriesOriginal, testSeriesOriginal = seriesOriginal[:train_size], seriesOriginal[train_size:]
+	trainSeriesIndicator, testSeriesIndicator = seriesIndicator[:train_size], seriesIndicator[train_size:]
 
-	model = RandomForestModel(
-		lags=20,
-		n_estimators=100,
-		max_depth=10,
-		min_samples_split=5,
-		min_samples_leaf=2,
-		random_state=42,
-		n_jobs=-1
+	model = LinearRegressionModel(
+		lags=None,
+		lags_future_covariates=[0],
+		fit_intercept=True
 	)
-	model.fit(trainSeriesClose)
+	model.fit(
+		series=trainSeriesIndicator,
+		future_covariates=trainSeriesVolume
+	)
 
 	historical_forecasts = model.historical_forecasts(
-		seriesClose,
+		series=seriesIndicator,
+		future_covariates=seriesVolume,
 		start=train_size,
 		forecast_horizon=1,
 		stride=1,
-		retrain=False,
+		retrain=True,
 		overlap_end=True,
 		verbose=True
 	)
@@ -67,8 +77,10 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 	testSeriesClose = testSeriesClose.values().flatten()
 	testSeriesVolume = testSeriesVolume.values().flatten()
 	forecastValues = historical_forecasts.values().flatten()
+	testSeriesOriginal = testSeriesOriginal.values().flatten()
+	testSeriesIndicator = testSeriesIndicator.values().flatten()
 
-	min_len = min(len(historical_forecasts), len(testSeriesClose))
+	min_len = min(len(historical_forecasts), len(testSeriesIndicator))
 	
 	testDatetime = testDatetime[:min_len]
 	testSeriesOpen = testSeriesOpen[:min_len]
@@ -77,6 +89,8 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 	testSeriesClose = testSeriesClose[:min_len]
 	testSeriesVolume = testSeriesVolume[:min_len]
 	forecastValues = forecastValues[:min_len]
+	testSeriesOriginal = testSeriesOriginal[:min_len]
+	testSeriesIndicator = testSeriesIndicator[:min_len]
 
 	dataFrame = pd.DataFrame({
 		'datetime': testDatetime,
@@ -86,12 +100,14 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 		'close': testSeriesClose,
 		'volume': testSeriesVolume,
 		'model': forecastValues,
+		'original': testSeriesOriginal,
+		'indicator': testSeriesIndicator
 	})
 
 	dataFrame['long_signal'] = np.select(
 		[
-			(dataFrame['close'] > dataFrame['model']),
-			(dataFrame['close'] < dataFrame['model'])
+			(dataFrame['original'] > dataFrame['model']),
+			(dataFrame['original'] < dataFrame['model'])
 		],
 		[
 			-1,
@@ -102,8 +118,8 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 
 	dataFrame['short_signal'] = np.select(
 		[
-			(dataFrame['close'] > dataFrame['model']),
-			(dataFrame['close'] < dataFrame['model'])
+			(dataFrame['original'] > -dataFrame['model']),
+			(dataFrame['original'] < -dataFrame['model'])
 		],
 		[
 			-1,
@@ -114,8 +130,9 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 
 	#testDF = dataFrame.tail(50)
 	#superName = f"{strategy}_{nameExchange}_{symbol}_{type}_{timeFrame}.png"
-	#plt.plot(testDF['datetime'], testDF['close'], color="black")
-	#plt.plot(testDF['datetime'], testDF['model'], color="purple")
+	#plt.plot(testDF['datetime'], testDF['original'], color="black")
+	#plt.plot(testDF['datetime'], testDF['model'], color="green")
+	#plt.plot(testDF['datetime'], -testDF['model'], color="red")
 	#plt.savefig(str(output_dir / superName ))
 	#plt.close()
 
