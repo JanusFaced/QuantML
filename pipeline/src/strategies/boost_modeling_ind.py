@@ -24,6 +24,7 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 	strategy = inputMessage['strategy']
 
 	train_ratio: float = 0.50
+	future_covariates_cols = ['open', 'high', 'low', 'close', 'volume']
 
 	windowInd = 20
 	dataFrame['indicator'] = dataFrame['close'].rolling(window=windowInd).mean()
@@ -36,6 +37,7 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 	seriesClose = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='close')
 	seriesVolume = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='volume')
 	seriesIndicator = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols='indicator')
+	seriesCovariates = TimeSeries.from_dataframe(dataFrame, time_col='datetime', value_cols=future_covariates_cols)
 
 	train_size = int(len(seriesClose)*train_ratio)
 
@@ -45,6 +47,7 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 	trainSeriesClose, testSeriesClose = seriesClose[:train_size], seriesClose[train_size:]
 	trainSeriesVolume, testSeriesVolume = seriesVolume[:train_size], seriesVolume[train_size:]
 	trainSeriesIndicator, testSeriesIndicator = seriesIndicator[:train_size], seriesIndicator[train_size:]
+	trainSeriesCovariates, testSeriesCovariates = seriesCovariates[:train_size], seriesCovariates[train_size:]
 
 	model = CatBoostModel(
 		lags=None,
@@ -58,12 +61,12 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 	)
 	model.fit(
 		series=trainSeriesIndicator,
-		future_covariates=trainSeriesClose
+		future_covariates=trainSeriesCovariates
 	)
 
 	historical_forecasts = model.historical_forecasts(
 		series=testSeriesIndicator,
-		future_covariates=testSeriesClose,
+		future_covariates=testSeriesCovariates,
 		start=0,
 		forecast_horizon=1,
 		stride=1,
@@ -127,11 +130,11 @@ def main(inputMessage: dict[str, Any], dataFrame: pd.DataFrame) -> pd.DataFrame:
 		default=-1
 	)
 
-	testDF = dataFrame.tail(50)
-	superName = f"{strategy}_{nameExchange}_{symbol}_{type}_{timeFrame}.png"
-	plt.plot(testDF['datetime'], testDF['original'], color="black")
-	plt.plot(testDF['datetime'], testDF['model'], color="purple")
-	plt.savefig(str(output_dir / superName ))
-	plt.close()
+	#testDF = dataFrame.tail(50)
+	#superName = f"{strategy}_{nameExchange}_{symbol}_{type}_{timeFrame}.png"
+	#plt.plot(testDF['datetime'], testDF['original'], color="black")
+	#plt.plot(testDF['datetime'], testDF['model'], color="purple")
+	#plt.savefig(str(output_dir / superName ))
+	#plt.close()
 
 	return dataFrame[['datetime', 'open', 'high', 'low', 'close', 'volume', 'long_signal', 'short_signal']]
