@@ -10,6 +10,10 @@ from strategies import forest_modeling_close_i
 from strategies import boost_modeling_ind
 from strategies import boost_modeling_close_w
 from strategies import boost_modeling_close_i
+from strategies import logreg_class
+from strategies import tree_class
+from strategies import forest_class
+from strategies import boost_class
 import trading_simulator
 from logger_setup import get_logger
 
@@ -44,53 +48,61 @@ def main(inputMessage: dict[str, Any]) -> None:
 		dataFrame = boost_modeling_close_w.main(inputMessage, dataFrame)
 	elif inputMessage["strategy"] == "boost_modeling_close_i":
 		dataFrame = boost_modeling_close_i.main(inputMessage, dataFrame)
+	elif inputMessage["strategy"] == "logreg_class":
+		dataFrame = logreg_class.main(inputMessage, dataFrame)
+	elif inputMessage["strategy"] == "tree_class":
+		dataFrame = tree_class.main(inputMessage, dataFrame)
+	elif inputMessage["strategy"] == "forest_class":
+		dataFrame = forest_class.main(inputMessage, dataFrame)
+	elif inputMessage["strategy"] == "boost_class":
+		dataFrame = boost_class.main(inputMessage, dataFrame)
 
 	trading_simulator.main(inputMessage, dataFrame)
 
 if __name__ == "__main__":
 
 	listMSGs = [
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'boost_modeling_close_i'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'boost_class'},
 
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'boost_modeling_close_i'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'ETH', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'boost_class'},
 
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'boost_modeling_close_i'},
-		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'boost_modeling_close_i'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '2min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '4min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '8min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '15min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '30min', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '2h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '4h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '6h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '8h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '12h', 'strategy': 'boost_class'},
+		{'nameExchange': 'binance', 'symbol': 'BNB', 'type': 'spot', 'timeFrame': '1d', 'strategy': 'boost_class'},
 
 
 #		{'nameExchange': 'binance', 'symbol': 'BTC', 'type': 'spot', 'timeFrame': '1h', 'strategy': 'master'},
